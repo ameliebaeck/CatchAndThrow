@@ -144,33 +144,34 @@ public class Sequencing extends Thread{
 				
 				System.out.println("2 - Beam-position state finished"); //Debugging
 				System.out.println("--------------------------");
+				
+			
+				// push ball state
+				
+				try {
+					fire.set(true);
+					while(-10.0 != analogInPosition.get()) {
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				
+				// ball mode state
+				//set ballMode state true
+				regul.setBALLMode();
+				
+				//ball position state
+				//go to the measure position
+				refgen.setRef(5.0); // WE TRY WITH 5.0
+				try {
+					// this range might be needed to fix
+					while(4.9 > analogInPosition.get() && analogInPosition.get() > 5.1) {
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
 				passageSeq=true;
 			}
-			
-			// push ball state
-			
-			/*try {
-				fire.set(true);
-				while(-10.0 != analogInPosition.get()) {
-				}
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-			
-			// ball mode state
-			//set ballMode state true
-			regul.setBALLMode();*/
-			
-			//ball position state
-			//go to the measure position
-			/*refgen.setRef(5.0); // WE TRY WITH 5.0
-			try {
-				// this range might be needed to fix
-				while(4.9 > analogInPosition.get() && analogInPosition.get() > 5.1) {
-				}
-			} catch (Exception e) {
-				System.out.println(e);
-			}*/
 			
 			// measure size state
 			// measure the control signal to determine the size of the ball
