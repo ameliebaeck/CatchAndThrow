@@ -144,7 +144,7 @@ public class Sequencing extends Thread{
 				
 				System.out.println("2 - Beam-position state finished"); //Debugging
 				System.out.println("--------------------------");
-				passage+=1;
+				passageSeq+=1;
 			}
 			
 			// push ball state
