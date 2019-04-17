@@ -147,25 +147,27 @@ public class Sequencing extends Thread{
 				
 			
 				// push ball state
-				
 				try {
 					fire.set(true);
 					while(-10.0 != analogInPosition.get()) {
+						System.out.println("No ball on the beam"); //Debugging
 					}
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 				
+				
 				// ball mode state
 				//set ballMode state true
+				refgen.setRef(5.0); // WE TRY WITH 5.0
 				regul.setBALLMode();
 				
 				//ball position state
 				//go to the measure position
-				refgen.setRef(5.0); // WE TRY WITH 5.0
 				try {
 					// this range might be needed to fix
 					while(4.9 > analogInPosition.get() && analogInPosition.get() > 5.1) {
+						System.out.println("Ball on the beam at postion " + analogInPosition.get()); //Debugging
 					}
 				} catch (Exception e) {
 					System.out.println(e);
