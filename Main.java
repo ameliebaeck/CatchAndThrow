@@ -37,6 +37,6 @@ public class Main {
         
         refgen.start(); 
         regul.start(); 
-        seq.start()
+        seq.start();
     } 
 } 
