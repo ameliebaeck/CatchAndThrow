@@ -6,7 +6,7 @@ import se.lth.control.realtime.AnalogIn;
 import se.lth.control.realtime.DigitalIn;
 import se.lth.control.realtime.DigitalOut;
 
-
+//TEST COMMENT
 
 public class Sequencing extends Thread{
 	
