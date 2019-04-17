@@ -46,6 +46,7 @@ public class Regul extends Thread {
 	private double v;
 	
 	private boolean pitch;
+	private double ballpos;
 	
 
 	// Inner monitor class
@@ -187,6 +188,16 @@ public class Regul extends Thread {
 			System.out.println(e);
 		}
 		return pitch;
+	}
+
+	//Get position value. Called from Sequencing
+	public boolean getBallPos (){
+		try {
+			ballpos = analogInPosition.get();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return ballpos;
 	}
 
 	public void run() {

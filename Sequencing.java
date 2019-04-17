@@ -149,29 +149,38 @@ public class Sequencing extends Thread{
 				// push ball state
 				try {
 					fire.set(true);
-					while(-10.0 != analogInPosition.get()) {
+					while(-10.0 != regul.getBallPos()) {
 						System.out.println("No ball on the beam"); //Debugging
 					}
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 				
-				
+				System.out.println("3 - Push ball state finished"); //Debugging
+				System.out.println("--------------------------");
+
 				// ball mode state
 				//set ballMode state true
 				refgen.setRef(5.0); // WE TRY WITH 5.0
 				regul.setBALLMode();
+
+				System.out.println("4 - Ball mode state finished"); //Debugging
+				System.out.println("--------------------------");
 				
 				//ball position state
 				//go to the measure position
 				try {
 					// this range might be needed to fix
-					while(4.9 > analogInPosition.get() && analogInPosition.get() > 5.1) {
+					while(4.9 > regul.getBallPos() && regul.getBallPos() > 5.1) {
 						System.out.println("Ball on the beam at postion " + analogInPosition.get()); //Debugging
 					}
 				} catch (Exception e) {
 					System.out.println(e);
 				}
+
+				System.out.println("5 - Ball position state finished"); //Debugging
+				System.out.println("--------------------------");
+
 				passageSeq=true;
 			}
 			
