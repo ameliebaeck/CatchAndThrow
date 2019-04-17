@@ -90,59 +90,62 @@ public class Sequencing extends Thread{
 	
 	public void run() {
 		setPriority(priority);
-		
+		int passageSeq = 0;
 		while(true) {
 		
 			//initial state
 			// set ref angle to 0
 			// while(){}
-			regul.setBEAMMode();
-			refgen.setRef(0.0);
-			try {
-				while((0.0 > regul.getAngle()) || (regul.getAngle() > 0.12)) {
-					System.out.println("In Init State");
-					System.out.println(regul.getAngle());
-				}		
-			} catch (Exception e) {
-				System.out.println(e);
-			}
-			
-			//JUST FOR DEBUGGING
-			/*refgen.setRef(5.0);
-			try {
-				while((4.65 > regul.getAngle()) || (regul.getAngle() > 5.2)) {
-					System.out.println("In Init State");
-					System.out.println(regul.getAngle());
-				}		
-			} catch (Exception e) {
-				System.out.println(e);
-			}*/
-			
-			System.out.println("1 - Initial state finished"); //Debugging
-			System.out.println("--------------------------");
-			
-			
-			//beam-position state
-			// decrease angle until pitch signal false
-			//hold final position --> IMPLEMENT THIS
-			regul.setBEAMPOSMode();
-			try {
-				//double tempref=0.0;
-				while(regul.getPitch()) {
-					//tempref = tempref - 0.004;
-					//refgen.setRef(tempref);
+			if(!passageSeq) {
+				regul.setBEAMMode();
+				refgen.setRef(0.0);
+				
+				try {
+					while((0.0 > regul.getAngle()) || (regul.getAngle() > 0.12)) {
+						System.out.println("In Init State");
+						System.out.println(regul.getAngle());
+					}		
+				} catch (Exception e) {
+					System.out.println(e);
 				}
-			} catch (Exception e) {
-				System.out.println(e);
-				System.out.println("Exception pitch.get");
-			}
+				
+				//JUST FOR DEBUGGING
+				/*refgen.setRef(5.0);
+				try {
+					while((4.65 > regul.getAngle()) || (regul.getAngle() > 5.2)) {
+						System.out.println("In Init State");
+						System.out.println(regul.getAngle());
+					}		
+				} catch (Exception e) {
+					System.out.println(e);
+				}*/
+				
+				System.out.println("1 - Initial state finished"); //Debugging
+				System.out.println("--------------------------");
+				
+				
+				//beam-position state
+				// decrease angle until pitch signal false
+				//hold final position --> IMPLEMENT THIS
+				regul.setBEAMPOSMode();
+				try {
+					//double tempref=0.0;
+					while(regul.getPitch()) {
+						//tempref = tempref - 0.004;
+						//refgen.setRef(tempref);
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+					System.out.println("Exception pitch.get");
+				}
 
-			refgen.setRef(regul.getAngle());
-			regul.setBEAMMode();
-			
-			System.out.println("2 - Beam-position state finished"); //Debugging
-			System.out.println("--------------------------");
-			
+				refgen.setRef(regul.getAngle());
+				regul.setBEAMMode();
+				
+				System.out.println("2 - Beam-position state finished"); //Debugging
+				System.out.println("--------------------------");
+				passage+=1;
+			}
 			
 			// push ball state
 			
