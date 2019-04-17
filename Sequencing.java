@@ -90,7 +90,7 @@ public class Sequencing extends Thread{
 	
 	public void run() {
 		setPriority(priority);
-		int passageSeq = 0;
+		boolean passageSeq = false;
 		while(true) {
 		
 			//initial state
@@ -144,7 +144,7 @@ public class Sequencing extends Thread{
 				
 				System.out.println("2 - Beam-position state finished"); //Debugging
 				System.out.println("--------------------------");
-				passageSeq+=1;
+				passageSeq=true;
 			}
 			
 			// push ball state
