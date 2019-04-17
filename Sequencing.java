@@ -161,7 +161,7 @@ public class Sequencing extends Thread{
 
 				// ball mode state
 				//set ballMode state true
-				refgen.setRef(5.0); // WE TRY WITH 5.0
+				refgen.setRef(0.0); // WE TRY WITH 5.0
 				regul.setBALLMode();
 
 				System.out.println("4 - Ball mode state finished"); //Debugging
