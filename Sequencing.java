@@ -187,7 +187,23 @@ public class Sequencing extends Thread{
 			case SMALL: {
 				regul.setBEAMMode();
 				//small state
-				
+				//increase angle
+				refgren.setRef(5);
+				try {
+					while(-7.0 < analogInPosition.get()) {
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				//decrease angle to throw in the small basket
+				refgren.setRef(-5);
+				try {
+					while(-9.5 < analogInPosition.get()) {
+					}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				break;
 				
 			}
 			case MEDIUM: {
