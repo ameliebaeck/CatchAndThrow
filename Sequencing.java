@@ -149,7 +149,7 @@ public class Sequencing extends Thread{
 				// push ball state
 				try {
 					fire.set(true);
-					while(-10.0 != regul.getBallPos()) {
+					while(-10.0 == regul.getBallPos()) {
 						System.out.println("No ball on the beam"); //Debugging
 					}
 				} catch (Exception e) {
