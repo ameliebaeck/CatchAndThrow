@@ -136,6 +136,9 @@ public class Sequencing extends Thread{
 				System.out.println(e);
 				System.out.println("Exception pitch.get");
 			}
+
+			refgen.setRef(regul.getAngle());
+			regul.setBEAMMode();
 			
 			System.out.println("2 - Beam-position state finished"); //Debugging
 			System.out.println("--------------------------");

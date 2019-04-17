@@ -344,7 +344,7 @@ public class Regul extends Thread {
 						//yref = yref+((yref-y2)/(Math.abs(yref-y2)))*0.005;
 					}else{
 						passage +=1;
-						yref=y2-.17;
+						//yref=y2-.17;
 					}
 				}
 				} catch (Exception e) {
