@@ -191,7 +191,7 @@ public class Regul extends Thread {
 	}
 
 	//Get position value. Called from Sequencing
-	public boolean getBallPos (){
+	public double getBallPos (){
 		try {
 			ballpos = analogInPosition.get();
 		} catch (Exception e) {
