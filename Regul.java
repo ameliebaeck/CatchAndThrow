@@ -6,6 +6,7 @@ import se.lth.control.realtime.DigitalIn;
 import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
+import java.util.LinkedList;
 
 
 public class Regul extends Thread {
@@ -31,6 +32,7 @@ public class Regul extends Thread {
 	private Semaphore mutex; // used for synchronization at shut-down
 
 	private ModeMonitor modeMon;
+	private ListMonitor signalMon;
 
 	private final double min = -10.0;
 	private final double max = 10.0;
@@ -79,6 +81,10 @@ public class Regul extends Thread {
 			System.out.println(e.getMessage());
 		}
 		modeMon = new ModeMonitor();
+		signalMon = new ListMonitor();
+		for(int i = 0;i<50;i++) {
+			signalMon.add(0.0);
+		}
 	}
 
 	public void setOpCom(OpCom opcom) {
@@ -200,6 +206,25 @@ public class Regul extends Thread {
 		return ballpos;
 	}
 
+	class ListMonitor {
+		private LinkedList<Double> signalList = new LinkedList<Double>();
+		
+		public synchronized void add(double x) {
+			signalList.add(x);
+		}
+		public synchronized void addElement(double controlSignalElement) {
+			signalList.remove();
+			signalList.add(controlSignalElement);
+		}
+		public synchronized LinkedList<Double> getControlSignal() {
+			return (LinkedList) signalList.clone();
+		}
+	}
+
+	public LinkedList<Double> getControlSignalList() {
+		return signalMon.getControlSignal();
+	}
+
 	public void run() {
 		long duration;
 		long t = System.currentTimeMillis();
@@ -278,6 +303,7 @@ public class Regul extends Thread {
 					
 					//inner.updateState(u2-uff);
 					inner.updateState(u2);
+					signalMon.addElement(u2);
 				}
 				
 				sendDataToOpCom(yref,y2,u2);
@@ -318,6 +344,7 @@ public class Regul extends Thread {
 						}
 						
 						inner.updateState(u2-uff);
+						signalMon.addElement(u2-uff);
 					}
 					
 					if((v+uff) != u2) { //Inner loop saturated

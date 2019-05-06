@@ -6,7 +6,7 @@ import se.lth.control.realtime.AnalogIn;
 import se.lth.control.realtime.DigitalIn;
 import se.lth.control.realtime.DigitalOut;
 import java.util.concurrent.TimeUnit; // for sleep function
-
+import java.util.LinkedList;
 
 
 public class Sequencing extends Thread{
@@ -23,6 +23,7 @@ public class Sequencing extends Thread{
 	
 	private int priority;
 	private Semaphore mutex; // used for synchronization at shut-down
+	private LinkedList<Double> sumList = new LinkedList<Double>();
 	
 	private AnalogIn analogInAngle;
 	private AnalogIn analogInPosition;
@@ -178,12 +179,12 @@ public class Sequencing extends Thread{
                     boolean release = false;
                     while(!release) {
                         System.out.println("Inside release while");
-                        
+                        /*
                         while(-1 > regul.getBallPos() && regul.getBallPos() > 1) {
                             System.out.println("Ball on the beam at postion " + regul.getAngle()); //Debugging
                             System.out.println("Outside the interval -1, 1");
                             }
-                    
+							*/
                         while(-1 < regul.getBallPos() && regul.getBallPos() < 1){
                                 if (resettime){
                                     catchtime = System.currentTimeMillis();
@@ -203,7 +204,56 @@ public class Sequencing extends Thread{
                         
                         resettime = true;
                         
-                    }
+					}
+					double dist = 5;
+						refgen.setRef(dist);
+						resettime = true;
+						catchtime = 0.0;
+						intervaltime = 0.0;
+						release = false;
+						while(!release) {
+                        //System.out.println("Inside release while");                        
+							while(dist-.5< regul.getBallPos() && regul.getBallPos() < dist+.5){
+									if (resettime){
+										catchtime = System.currentTimeMillis();
+										intervaltime = catchtime;
+										resettime = false;
+									} else {
+										intervaltime = System.currentTimeMillis();
+									}
+									
+									if((intervaltime - catchtime) > 3000){
+										LinkedList<Double> signalList = regul.getControlSignalList();
+										double sum = 0;										
+										//System.out.println("signalList size: " + signalList.size());
+										for(int i = 0;i<signalList.size();i++) {
+											sum+=signalList.pop();
+										}
+										
+										// Mean-measurement
+
+										/*                       
+										sumList.add(sum);
+										TimeUnit.SECONDS.sleep(2);
+										//release = true;
+										//break;
+										if(sumList.size()>60) {
+											System.out.println("Done with measurement");
+											for(int i = 0;i<sumList.size();i++) {
+												System.out.print(sumList.pop() + " ");
+											}
+											TimeUnit.SECONDS.sleep(20);
+										}
+										*/
+									
+								}
+								//System.out.println("Within the interval -1, 1");
+							}
+							
+								resettime = true;
+							
+						}
+					} 
 				} catch (Exception e) {
 					System.out.println(e);
 				}
@@ -211,21 +261,14 @@ public class Sequencing extends Thread{
 				System.out.println("5 - Ball position state finished"); //Debugging
 				System.out.println("--------------------------");
 
-			//	passageSeq=true;
-			//}
+					
+			// set state according to size-interval
 			
-			// measure size state
-			// measure the control signal to determine the size of the ball
-			/*double controlsignal = 0.0;
-			for(int i=0; i<10; i++) {
-			//controlsignal = controlsignal+regul.getControlSignal(); //IMPLEMENT in REGUL
-			}
-			controlsignal = controlsignal/10.0;
-			if(controlsignal < 1) {
+			
+			
+			if(sum<17) {
 				setSMALLMode();
-				
-				
-			} else if (1 < controlsignal && controlsignal < 2) {
+			} else if (17<sum&&sum<30) {
 				setMEDIUMMode();
 			} else {
 				setBIGMode();
@@ -234,27 +277,32 @@ public class Sequencing extends Thread{
 			switch (modeMon.getMode()) {
 			case SMALL: {
 				refgen.setRef(7);
+				
 				try{
 					TimeUnit.SECONDS.sleep(6);
 				} catch (Exception e){}
+				
 				regul.setBEAMMode();
 				//small state
 				//increase angle
 				refgen.setRef(5);
+				
 				try {
 					while(3 < regul.getBallPos()) {
 					}
 				} catch (Exception e) {
 					System.out.println(e);
 				}
+				
 				//decrease angle to throw in the small basket
 				refgen.setRef(-7);
+				
 				try {
 					TimeUnit.SECONDS.sleep(4);
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				/*break;
+				
 				
 			}
 			case MEDIUM: { // Distance from basket to the wheel: 1,80m */
@@ -280,7 +328,7 @@ public class Sequencing extends Thread{
 				while(regul.getBallPos() != -10.0){
 					System.out.println("Ball position: " + regul.getBallPos());
 				}
-				/*break;
+				
 			} 
 			case BIG: { 
 				//Drop ball on the floor
@@ -295,7 +343,7 @@ public class Sequencing extends Thread{
 				}
 				break;
 			}
-			}*/
+			}
 			
 		} //While loop
 	}//Run method
