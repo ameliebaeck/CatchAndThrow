@@ -40,7 +40,7 @@ public class Regul extends Thread {
 	private double u2;
 	private double y;
 	private double y2;
-	private double ylastsample;
+	private double ylastsamp = -10.0;
 	private double yref;
 	private double phiff;
 	private double uff;
@@ -48,7 +48,8 @@ public class Regul extends Thread {
 	private double v;
 	
 	private boolean pitch;
-	private boolean isCaught = false;
+	private double ballpos;
+	private boolean gotCaught = false;
 	
 
 	// Inner monitor class
@@ -88,6 +89,10 @@ public class Regul extends Thread {
 		this.opcom = opcom;
 	}
 
+	public boolean isCaught(){
+		return gotCaught;
+		
+	}
 	public void setRefGen(ReferenceGenerator referenceGenerator) {
 		// Written by you
 		this.referenceGenerator = referenceGenerator;
@@ -107,7 +112,7 @@ public class Regul extends Thread {
 		inner.setParameters(p);
 		System.out.println("Parameters changed for the inner loop.");
 	}
-	
+
 	public synchronized PIParameters getInnerParameters() {
 		// Written by you
 		return inner.getParameters();
@@ -129,11 +134,7 @@ public class Regul extends Thread {
 		modeMon.setMode(0);
 		System.out.println("Controller turned OFF.");
 	}
-	
-	public boolean gotCaught(){
-		return isCaught;		
-	}
-	
+
 	public void setBEAMMode() {
 		// Written by you
 		modeMon.setMode(1);
@@ -146,16 +147,16 @@ public class Regul extends Thread {
 		System.out.println("Controller in BALL mode.");
 	}
 	
-	public void setCATCHMode() {
-		//Written by you
-		modeMon.setMode(4);
-		System.out.println("Controller in CATCH mode.");
-	}
-	
 	public void setBEAMPOSMode() {
 		// Written by you
 		modeMon.setMode(3);
 		System.out.println("Controller in BEAMPOS mode.");
+	}
+	
+	public void setCATCHMode() {
+		modeMon.setMode(4);
+		System.out.println("Controller in CATCH mode.");
+		
 	}
 
 	public int getMode() {
@@ -200,6 +201,16 @@ public class Regul extends Thread {
 			System.out.println(e);
 		}
 		return pitch;
+	}
+
+	//Get position value. Called from Sequencing
+	public double getBallPos (){
+		try {
+			ballpos = analogInPosition.get();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return ballpos;
 	}
 
 	public void run() {
@@ -334,77 +345,19 @@ public class Regul extends Thread {
 				
 				break;
 			}
-			case BEAMPOS:{
-				
-				/*try {
-					y = analogInPosition.get();
-				} catch (Exception e) {
-					System.out.println(e);
-				}*/
-				
-				try {
-					y2 = analogInAngle.get();
-					//System.out.println(y2);
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
-				try  {
-					if(passage==0) {
-					if(digitalInPosition.get()){
-					
-						yref = yref-0.004;
-						//yref = yref+((yref-y2)/(Math.abs(yref-y2)))*0.005;
-					}else{
-						passage +=1;
-						yref=y2-.17;
-					}
-				}
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
-				//System.out.println("yref: " + (yref));
-				//System.out.println("y2: " + (y2));
-				
-				//uff = referenceGenerator.getUff();
-					
-				synchronized(inner) {
-					v = inner.calculateOutput(y2, yref);
-					//u2 = limit(v+uff, min, max);
-					u2 = limit(v, min, max);
-					try {
-						analogOut.set(u2);
-					} catch (Exception e) {
-						System.out.println(e);
-					}
-					
-					//inner.updateState(u2-uff);
-					inner.updateState(u2);
-				}
-				
-				sendDataToOpCom(yref,y2,u2);
-				
-				break;
-			}
-			default: {
-				System.out.println("Error: Illegal mode.");
-				break;
-			}
 			case CATCHING: {
-				// Code for the CATCH mode
+				// Code for the BALL mode
 				// Written by you.
 				// Should include a call to sendDataToOpCom 
-				
+				 
 				try {
 					y = analogInPosition.get();
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				if((ylastsample-y)>0){
-					this.isCaught = true;
+				if((ylastsamp-y)>0{
+					gotCaught = true;
 				}
-					
 				yref = referenceGenerator.getRef();
 				uff = referenceGenerator.getUff();
 				phiff = referenceGenerator.getPhiff();
@@ -443,8 +396,64 @@ public class Regul extends Thread {
 				
 				break;
 			}
+			case BEAMPOS:{
+				
+				/*try {
+					y = analogInPosition.get();
+				} catch (Exception e) {
+					System.out.println(e);
+				}*/
+				
+				try {
+					y2 = analogInAngle.get();
+					//System.out.println(y2);
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				
+				try  {
+					if(passage==0) {
+					if(digitalInPosition.get()){
+					
+						yref = yref-0.004;
+						//yref = yref+((yref-y2)/(Math.abs(yref-y2)))*0.005;
+					}else{
+						passage +=1;
+						//yref=y2-.17;
+					}
+				}
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				
+				//System.out.println("yref: " + (yref));
+				//System.out.println("y2: " + (y2));
+				
+				//uff = referenceGenerator.getUff();
+					
+				synchronized(inner) {
+					v = inner.calculateOutput(y2, yref);
+					//u2 = limit(v+uff, min, max);
+					u2 = limit(v, min, max);
+					try {
+						analogOut.set(u2);
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+					
+					//inner.updateState(u2-uff);
+					inner.updateState(u2);
+				}
+				
+				sendDataToOpCom(yref,y2,u2);
+				
+				break;
 			}
-			
+			default: {
+				System.out.println("Error: Illegal mode.");
+				break;
+			}
+			}
 
 	// sleep
 	t=t+inner.getHMillis();duration=t-System.currentTimeMillis();
