@@ -232,7 +232,7 @@ public class Sequencing extends Thread{
 			}
 			
 			switch (modeMon.getMode()) {
-			case SMALL: {*/
+			case SMALL: {
 				refgen.setRef(7);
 				try{
 					TimeUnit.SECONDS.sleep(6);
@@ -257,26 +257,32 @@ public class Sequencing extends Thread{
 				/*break;
 				
 			}
-			case MEDIUM: {
-
+			case MEDIUM: { // Distance from basket to the wheel: 1,80m */
+				refgen.setRef(-8);
+				try{
+					TimeUnit.SECONDS.sleep(6);
+				} catch (Exception e){}
 				regul.setBEAMMode();
-				refgen.setRef(5);
+				refgen.setRef(-8);
 				try {
-					while(0 < regul.getAnalogInPosition()) {
+					while(-1 > regul.getBallPos()) {
+						System.out.println("Inside while -1 position");
 					}
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				refgen.setRef(-5);
+				refgen.setRef(5.5);
 				try {
-					while(5 > regul.getAnalogInPosition()) {
-					}
+					TimeUnit.SECONDS.sleep(4);
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				refgen.setRef(5);
-			}
-			case BIG: { */
+				while(regul.getBallPos() != -10.0){
+					System.out.println("Ball position: " + regul.getBallPos());
+				}
+				/*break;
+			} 
+			case BIG: { 
 				//Drop ball on the floor
 				regul.setBEAMMode();
 				refgen.setRef(5);
@@ -287,7 +293,7 @@ public class Sequencing extends Thread{
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-			/*	break;
+				break;
 			}
 			}*/
 			
