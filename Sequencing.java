@@ -273,7 +273,7 @@ public class Sequencing extends Thread{
 				}
 				refgen.setRef(5);
 			}
-			case BIG: {
+			case BIG: { */
 				//Drop ball on the floor
 				regul.setBEAMMode();
 				refgen.setRef(5);
@@ -284,7 +284,7 @@ public class Sequencing extends Thread{
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				break;
+			/*	break;
 			}
 			}*/
 			
