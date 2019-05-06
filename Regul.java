@@ -355,7 +355,7 @@ public class Regul extends Thread {
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				if((ylastsamp-y)>0{
+				if((ylastsamp-y)>0){
 					gotCaught = true;
 				}
 				yref = referenceGenerator.getRef();
