@@ -232,26 +232,29 @@ public class Sequencing extends Thread{
 			}
 			
 			switch (modeMon.getMode()) {
-			case SMALL: {
+			case SMALL: {*/
+				refgen.setRef(7);
+				try{
+					TimeUnit.SECONDS.sleep(6);
+				} catch (Exception e){}
 				regul.setBEAMMode();
 				//small state
 				//increase angle
-				refgren.setRef(5);
+				refgen.setRef(5);
 				try {
-					while(-7.0 < analogInPosition.get()) {
+					while(3 < regul.getBallPos()) {
 					}
 				} catch (Exception e) {
 					System.out.println(e);
 				}
 				//decrease angle to throw in the small basket
-				refgren.setRef(-5);
+				refgen.setRef(-7);
 				try {
-					while(-9.5 < analogInPosition.get()) {
-					}
+					TimeUnit.SECONDS.sleep(4);
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				break;
+				/*break;
 				
 			}
 			case MEDIUM: {
