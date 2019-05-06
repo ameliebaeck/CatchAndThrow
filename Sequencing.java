@@ -5,6 +5,7 @@ import se.lth.control.realtime.Semaphore;
 import se.lth.control.realtime.AnalogIn;
 import se.lth.control.realtime.DigitalIn;
 import se.lth.control.realtime.DigitalOut;
+import java.util.concurrent.TimeUnit; // for sleep function
 
 
 
@@ -96,7 +97,7 @@ public class Sequencing extends Thread{
 			//initial state
 			// set ref angle to 0
 			// while(){}
-			if(!passageSeq) {
+			//if(!passageSeq) {
 				regul.setBEAMMode();
 				refgen.setRef(0.0);
 				
@@ -171,9 +172,38 @@ public class Sequencing extends Thread{
 				//go to the measure position
 				try {
 					// this range might be needed to fix
-					while(4.9 > regul.getBallPos() && regul.getBallPos() > 5.1) {
-						System.out.println("Ball on the beam at postion " + analogInPosition.get()); //Debugging
-					}
+					boolean resettime = true;
+                    double catchtime = 0.0;
+                    double intervaltime = 0.0;
+                    boolean release = false;
+                    while(!release) {
+                        System.out.println("Inside release while");
+                        
+                        while(-1 > regul.getBallPos() && regul.getBallPos() > 1) {
+                            System.out.println("Ball on the beam at postion " + regul.getAngle()); //Debugging
+                            System.out.println("Outside the interval -1, 1");
+                            }
+                    
+                        while(-1 < regul.getBallPos() && regul.getBallPos() < 1){
+                                if (resettime){
+                                    catchtime = System.currentTimeMillis();
+                                    intervaltime = catchtime;
+                                    resettime = false;
+                                } else {
+                                    intervaltime = System.currentTimeMillis();
+                                }
+                                
+                                if((intervaltime - catchtime) > 3000){
+                                    release = true;
+                                    break;
+                                }
+                                
+                                System.out.println("Within the interval -1, 1");
+                        }
+                        
+                        resettime = true;
+                        
+                    }
 				} catch (Exception e) {
 					System.out.println(e);
 				}
@@ -181,8 +211,8 @@ public class Sequencing extends Thread{
 				System.out.println("5 - Ball position state finished"); //Debugging
 				System.out.println("--------------------------");
 
-				passageSeq=true;
-			}
+			//	passageSeq=true;
+			//}
 			
 			// measure size state
 			// measure the control signal to determine the size of the ball
@@ -246,10 +276,11 @@ public class Sequencing extends Thread{
 			case BIG: {
 				//Drop ball on the floor
 				regul.setBEAMMode();
-				refgen.setRef(-5);
+				refgen.setRef(5);
 				try {
-					while(3 > analogInPosition.get() || -4.5 > analogInAngle.get()) {
+					while(-3 < regul.getAngle() && 4.5 > regul.getAngle()) {
 					}
+					TimeUnit.SECONDS.sleep(2);
 				} catch (Exception e) {
 					System.out.println(e);
 				}
