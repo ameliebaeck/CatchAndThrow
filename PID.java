@@ -21,7 +21,7 @@ public class PID {
 		PIDParameters p = new PIDParameters();
 		//Doubles
 		p.K = -0.35;  //-0.2;
-		p.Ti = 3.00; //5.00;  //0.0;
+		p.Ti = 1.00; //5.00;  //0.0;
 		p.Tr = 10.0;
 		p.Td = 1.4; //1.5; //1.2;
 		p.N = 10.0;
