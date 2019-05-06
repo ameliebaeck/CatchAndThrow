@@ -20,10 +20,10 @@ public class PID {
 		//Create reference to PIParameters and initialize parameters
 		PIDParameters p = new PIDParameters();
 		//Doubles
-		p.K = -0.2;
-		p.Ti = 0.0;
+		p.K = -0.35;  //-0.2;
+		p.Ti = 5.00;  //0.0;
 		p.Tr = 10.0;
-		p.Td = 1.2;
+		p.Td = 1.5; //1.2;
 		p.N = 10.0;
 		p.Beta = 1.0;
 		p.H = 0.02; //Sampling interval in seconds
