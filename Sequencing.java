@@ -29,6 +29,7 @@ public class Sequencing extends Thread{
 	
 	private DigitalIn pitch;
 	private DigitalOut fire;
+	private boolean gotCaught = false;
 	
 	//Inner monitor class
 	class ModeMonitor{
@@ -67,6 +68,10 @@ public class Sequencing extends Thread{
 	
 	public void setOpCom(OpCom opcom) {
 		this.opcom = opcom;
+	}
+	
+	public void ballCaught() {
+		gotCaught = true;
 	}
 	
 	public void setRefGen(ReferenceGenerator refgen) {
@@ -143,7 +148,7 @@ public class Sequencing extends Thread{
 			
 			// push ball state
 			
-			/*try {
+			try {
 				fire.set(true);
 				while(-10.0 != analogInPosition.get()) {
 				}
@@ -153,7 +158,14 @@ public class Sequencing extends Thread{
 			
 			// ball mode state
 			//set ballMode state true
-			regul.setBALLMode();*/
+			regul.setCATCHMode();
+			refgen.setRef(-10.0);
+			while(!regul.gotCaught());
+			regul.setBALLMode();
+			refgen.setRef(5.0);
+			while(true){
+				System.out.println("Succe?");
+			}
 			
 			//ball position state
 			//go to the measure position
