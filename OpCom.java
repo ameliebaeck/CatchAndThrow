@@ -22,7 +22,7 @@ public class OpCom {
 
 	// Declarartion of panels.
 	private BoxPanel guiPanel, plotterPanel, innerParPanel, outerParPanel, parPanel;
-	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel;
+	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel, sizeButtonPanel;
 	private PlotterPanel measPanel, ctrlPanel;
 
 	// Declaration of components.
@@ -51,6 +51,11 @@ public class OpCom {
 
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
+	
+	private JButton small;
+	private JButton medium;
+	private JButton big; 
+	
 
 	/** Constructor. */
 	public OpCom(int plotterPriority) {
@@ -327,6 +332,20 @@ public class OpCom {
 		parPanel.addGlue();
 		parPanel.add(outerParButtonPanel);
 
+		//Create panel for the size buttons
+		sizeButtonPanel = new JPanel();
+		sizeButtonPanel.setLayout(new FlowLayout());
+		buttonPanel.setBorder(BorderFactory.createEtchedBorder());
+		//Create the buttons
+		small = new JButton("Small");
+		medium = new JButton("Medium");
+		big = new JButton("Big");
+		// Group the size buttons
+		ButtonGroup sizeGroup = new ButtonGroup();
+		sizeGroup.add(small);
+		sizeGroup.add(medium);
+		sizeGroup.add(big);
+		
 		// Create panel for the radio buttons.
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
@@ -370,12 +389,18 @@ public class OpCom {
 		buttonPanel.add(offModeButton, BorderLayout.NORTH);
 		buttonPanel.add(beamModeButton, BorderLayout.CENTER);
 		buttonPanel.add(ballModeButton, BorderLayout.SOUTH);
+		
+		// Add size buttons to button panel.
+		sizeButtonPanel.add(small, BorderLayout.NORTH);
+		sizeButtonPanel.add(medium, BorderLayout.CENTER);
+		sizeButtonPanel.add(big, BorderLayout.SOUTH);
 
 		// Panel for parameter panel and radio buttons
 		somePanel = new JPanel();
 		somePanel.setLayout(new BorderLayout());
 		somePanel.add(parPanel, BorderLayout.CENTER);
 		somePanel.add(buttonPanel, BorderLayout.SOUTH);
+		somePanel.add(sizeButtonPanel, BorderLayout.NORTH);
 
 		// Select initial mode.
 		mode = regul.getMode();
