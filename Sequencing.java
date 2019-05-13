@@ -50,16 +50,16 @@ public class Sequencing extends Thread{
 	public Sequencing(int pri){
 		priority = pri;
 		mutex = new Semaphore(1);
-		try {
-			fire = new DigitalOut(0);
-			pitch = new DigitalIn(0);
+		/*try {
+			//fire = new DigitalOut(0);
+			//pitch = new DigitalIn(0);
 			//analogInAngle = new AnalogIn(0); //Read from Regul
-			analogInPosition = new AnalogIn(1);
-			analogOut = new AnalogOut(0);
+			//analogInPosition = new AnalogIn(1);
+			//analogOut = new AnalogOut(0);
 		} catch (IOChannelException e) {
 			System.out.print("Error: IOChannelException: ");
 			System.out.println(e.getMessage());
-		}
+		}*/
 		modeMon = new ModeMonitor();
 	}
 	
@@ -77,16 +77,19 @@ public class Sequencing extends Thread{
 	
 	public void setSMALLMode() {
 		modeMon.setMode(0);
+		opcom.smallButton();
 		System.out.println("SMALL ball detected");
 	}
 	
 	public void setMEDIUMMode() {
 		modeMon.setMode(1);
+		opcom.mediumButton();
 		System.out.println("MEDIUM ball detected");
 	}
 	
 	public void setBIGMode() {
 		modeMon.setMode(2);
+		opcom.bigButton();
 		System.out.println("BIG ball detected");
 	}
 	
@@ -150,7 +153,9 @@ public class Sequencing extends Thread{
 			
 				// push ball state
 				try {
-					fire.set(true);
+					//fire.set(true);
+					//regul.closeBall();
+					//regul.fireBall();
 					while(-10.0 == regul.getBallPos()) {
 						System.out.println("No ball on the beam"); //Debugging
 					}
@@ -165,12 +170,18 @@ public class Sequencing extends Thread{
 				//set ballMode state true
 				refgen.setRef(0.0); // WE TRY WITH 5.0
 				regul.setBALLMode();
+				//regul.closeBall();
 
 				System.out.println("4 - Ball mode state finished"); //Debugging
 				System.out.println("--------------------------");
 				
 				//ball position state
 				//go to the measure position
+				double sum = 0;	
+				PIParameters pInner = regul.getInnerParameters();
+				pInner.integratorOn = false;
+				regul.setInnerParameters(pInner);
+				
 				try {
 					// this range might be needed to fix
 					boolean resettime = true;
@@ -178,13 +189,9 @@ public class Sequencing extends Thread{
                     double intervaltime = 0.0;
                     boolean release = false;
                     while(!release) {
-                        System.out.println("Inside release while");
-                        /*
-                        while(-1 > regul.getBallPos() && regul.getBallPos() > 1) {
-                            System.out.println("Ball on the beam at postion " + regul.getAngle()); //Debugging
-                            System.out.println("Outside the interval -1, 1");
-                            }
-							*/
+                        //System.out.println("Inside release while");  
+                        
+							
                         while(-1 < regul.getBallPos() && regul.getBallPos() < 1){
                                 if (resettime){
                                     catchtime = System.currentTimeMillis();
@@ -199,21 +206,27 @@ public class Sequencing extends Thread{
                                     break;
                                 }
                                 
-                                System.out.println("Within the interval -1, 1");
+                                //System.out.println("Within the interval -1, 1");
                         }
                         
                         resettime = true;
                         
 					}
-					double dist = 5;
+						double dist = 5;
 						refgen.setRef(dist);
 						resettime = true;
 						catchtime = 0.0;
 						intervaltime = 0.0;
 						release = false;
+						
+						long duration;
+						long t = System.currentTimeMillis();
+						double starttime = t;
+						
 						while(!release) {
                         //System.out.println("Inside release while");                        
-							while(dist-.5< regul.getBallPos() && regul.getBallPos() < dist+.5){
+							
+							while(dist-0.75< regul.getBallPos() && regul.getBallPos() < dist+0.75){
 									if (resettime){
 										catchtime = System.currentTimeMillis();
 										intervaltime = catchtime;
@@ -224,44 +237,49 @@ public class Sequencing extends Thread{
 									
 									if((intervaltime - catchtime) > 3000){
 										LinkedList<Double> signalList = regul.getControlSignalList();
-										double sum = 0;										
+																			
 										//System.out.println("signalList size: " + signalList.size());
 										for(int i = 0;i<signalList.size();i++) {
 											sum+=signalList.pop();
 										}
+										release=true;
+										break;
 										
-										// Mean-measurement
-
-										/*                       
-										sumList.add(sum);
-										TimeUnit.SECONDS.sleep(2);
-										//release = true;
-										//break;
-										if(sumList.size()>60) {
-											System.out.println("Done with measurement");
-											for(int i = 0;i<sumList.size();i++) {
-												System.out.print(sumList.pop() + " ");
-											}
-											TimeUnit.SECONDS.sleep(20);
+									}
+									t=t+200;duration=t-System.currentTimeMillis();
+									if(duration>0){
+										try {
+											sleep(duration);
+										} catch (InterruptedException x) {
 										}
-										*/
-									
-								}
+									}
 								//System.out.println("Within the interval -1, 1");
 							}
 							
 								resettime = true;
-							
+								t=t+200;duration=t-System.currentTimeMillis();
+								
+									if(duration>0){
+										try {
+											System.out.println(duration);
+											sleep(duration);
+										} catch (InterruptedException x) {
+										}
+									}
 						}
-					} 
+					 
 				} catch (Exception e) {
+					System.out.println("hfieshfsekf");
 					System.out.println(e);
+					System.out.println("done");
 				}
+				
+				
 
 				System.out.println("5 - Ball position state finished"); //Debugging
 				System.out.println("--------------------------");
 
-					
+				
 			// set state according to size-interval
 			
 			
@@ -273,6 +291,9 @@ public class Sequencing extends Thread{
 			} else {
 				setBIGMode();
 			}
+			
+			
+			
 			
 			switch (modeMon.getMode()) {
 			case SMALL: {

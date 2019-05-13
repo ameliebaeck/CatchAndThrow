@@ -22,6 +22,7 @@ public class Regul extends Thread {
 	private AnalogIn analogInPosition;
 	private AnalogOut analogOut;
 	private DigitalIn digitalInPosition;
+	private DigitalOut fire;
 
 	private ReferenceGenerator referenceGenerator;
 	private OpCom opcom;
@@ -76,6 +77,7 @@ public class Regul extends Thread {
 			analogInPosition = new AnalogIn(1);
 			analogOut = new AnalogOut(0);
 			digitalInPosition = new DigitalIn(0);
+			fire = new DigitalOut(0);
 		} catch (IOChannelException e) {
 			System.out.print("Error: IOChannelException: ");
 			System.out.println(e.getMessage());
@@ -95,6 +97,23 @@ public class Regul extends Thread {
 	public void setRefGen(ReferenceGenerator referenceGenerator) {
 		// Written by you
 		this.referenceGenerator = referenceGenerator;
+	}
+	public void fireBall() {
+		try {
+			fire.set(false);
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+		
+	}
+	public void closeBall() {
+		try {
+			fire.set(true);		
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	// Called in every sample in order to send plot data to OpCom

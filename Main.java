@@ -22,6 +22,7 @@ public class Main {
         seq.setRegul(regul);
 
         opcom.setRegul(regul); 
+        seq.setOpCom(opcom);
 
 	Runnable initializeGUI = new Runnable(){
 		public void run(){

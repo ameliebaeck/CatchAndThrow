@@ -335,7 +335,7 @@ public class OpCom {
 		//Create panel for the size buttons
 		sizeButtonPanel = new JPanel();
 		sizeButtonPanel.setLayout(new FlowLayout());
-		buttonPanel.setBorder(BorderFactory.createEtchedBorder());
+		//buttonPanel.setBorder(BorderFactory.createEtchedBorder());
 		//Create the buttons
 		small = new JButton("Small");
 		medium = new JButton("Medium");
@@ -473,6 +473,23 @@ public class OpCom {
 		}
 	}
 	
+	public void smallButton() {
+		big.setBackground(Color.red);
+		medium.setBackground(Color.red);
+		small.setBackground(Color.green);
+		
+	}
+	
+	public void mediumButton() {
+		big.setBackground(Color.red);
+		medium.setBackground(Color.green);
+		small.setBackground(Color.red);
+	}
+	public void bigButton() {
+		big.setBackground(Color.green);
+		medium.setBackground(Color.red);
+		small.setBackground(Color.red);
+	}
 	private void DebugPrint(String message) {
 		//System.out.println(message);
 	}

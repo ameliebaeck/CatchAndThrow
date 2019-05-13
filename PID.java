@@ -28,7 +28,7 @@ public class PID {
 		p.Beta = 1.0;
 		p.H = 0.02; //Sampling interval in seconds
 		//Boolean
-		p.integratorOn = false;
+		p.integratorOn = true;
 		
 		//Clone parameters
 		setParameters(p);
