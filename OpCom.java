@@ -22,7 +22,7 @@ public class OpCom {
 
 	// Declarartion of panels.
 	private BoxPanel guiPanel, plotterPanel, innerParPanel, outerParPanel, parPanel;
-	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel, sizeButtonPanel;
+	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel, sizeButtonPanel, statePanel;
 	private PlotterPanel measPanel, ctrlPanel;
 
 	// Declaration of components.
@@ -55,6 +55,8 @@ public class OpCom {
 	private JButton small;
 	private JButton medium;
 	private JButton big; 
+	
+	private JTextField seqState;
 	
 
 	/** Constructor. */
@@ -346,6 +348,15 @@ public class OpCom {
 		sizeGroup.add(medium);
 		sizeGroup.add(big);
 		
+		//Create panel for the sequencer state
+		statePanel = new JPanel();
+		statePanel.setLayout(new FlowLayout());
+		// Create text frame
+		seqState = new JTextField("OFF");
+		seqState.setEditable(true);
+		//seqState.setText("1-Initial state");
+		
+		
 		// Create panel for the radio buttons.
 		buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
@@ -394,6 +405,9 @@ public class OpCom {
 		sizeButtonPanel.add(small, BorderLayout.NORTH);
 		sizeButtonPanel.add(medium, BorderLayout.CENTER);
 		sizeButtonPanel.add(big, BorderLayout.SOUTH);
+		
+		//Add text frame (sequencer state) to the panel
+		statePanel.add(seqState,BorderLayout.CENTER);
 
 		// Panel for parameter panel and radio buttons
 		somePanel = new JPanel();
@@ -401,6 +415,7 @@ public class OpCom {
 		somePanel.add(parPanel, BorderLayout.CENTER);
 		somePanel.add(buttonPanel, BorderLayout.SOUTH);
 		somePanel.add(sizeButtonPanel, BorderLayout.NORTH);
+		somePanel.add(statePanel, BorderLayout.EAST);
 
 		// Select initial mode.
 		mode = regul.getMode();
@@ -490,6 +505,60 @@ public class OpCom {
 		medium.setBackground(Color.red);
 		small.setBackground(Color.red);
 	}
+	
+	//Called from Sequencing to update the state (text)
+	public void updateText (int stateNum){
+		
+		switch (stateNum){
+			case 1:{
+				seqState.setText("1-Initial state");
+				break;
+			}
+			case 2:{
+				seqState.setText("2-Beam position state");
+				break;
+			}
+			case 3:{
+				seqState.setText("3-Push ball state");
+				break;
+			}
+			case 4:{
+				seqState.setText("4-Catch ball state");
+				break;
+			}
+			case 5:{
+				seqState.setText("5-Ball position state");
+				break;
+			}
+			case 6:{
+				seqState.setText("6-Measure ball size state");
+				break;
+			}
+			case 71:{
+				seqState.setText("7.1-Small state");
+				break;
+			}
+			case 72:{
+				seqState.setText("7.2-Medium state");
+				break;
+			}
+			case 73:{
+				seqState.setText("7.3-Big state");
+				break;
+			}
+			case 81:{
+				seqState.setText("8.1-Throw to small basket state");
+				break;
+			}
+			case 82:{
+				seqState.setText("8.2- Throw to big basket state");
+				break;
+			}	
+		}//Switch-case
+		
+	}
+	
+	
 	private void DebugPrint(String message) {
 		//System.out.println(message);
 	}

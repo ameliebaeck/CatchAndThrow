@@ -104,6 +104,10 @@ public class Sequencing extends Thread{
 			//if(!passageSeq) {
 				regul.setBEAMMode();
 				refgen.setRef(0.0);
+				try{
+					opcom.updateText(1);
+				}catch (Exception e){}
+				
 				
 				try {
 					while((0.0 > regul.getAngle()) || (regul.getAngle() > 0.12)) {
@@ -133,6 +137,10 @@ public class Sequencing extends Thread{
 				// decrease angle until pitch signal false
 				//hold final position --> IMPLEMENT THIS
 				regul.setBEAMPOSMode();
+				try{
+					opcom.updateText(2);
+				}catch (Exception e){}
+				
 				try {
 					//double tempref=0.0;
 					while(regul.getPitch()) {
@@ -156,6 +164,12 @@ public class Sequencing extends Thread{
 					//fire.set(true);
 					//regul.closeBall();
 					//regul.fireBall();
+					
+					
+					try{
+					opcom.updateText(3);
+					}catch (Exception e){}
+					
 					while(-10.0 == regul.getBallPos()) {
 						System.out.println("No ball on the beam"); //Debugging
 					}
@@ -170,6 +184,9 @@ public class Sequencing extends Thread{
 				//set ballMode state true
 				refgen.setRef(0.0); // WE TRY WITH 5.0
 				regul.setBALLMode();
+				try{
+					opcom.updateText(4);
+				}catch (Exception e){}
 				//regul.closeBall();
 
 				System.out.println("4 - Ball mode state finished"); //Debugging
@@ -210,8 +227,12 @@ public class Sequencing extends Thread{
                         }
                         
                         resettime = true;
-                        
 					}
+					
+						try{
+							opcom.updateText(5);
+						}catch (Exception e){}
+						
 						double dist = 5;
 						refgen.setRef(dist);
 						resettime = true;
@@ -236,6 +257,9 @@ public class Sequencing extends Thread{
 									}
 									
 									if((intervaltime - catchtime) > 3000){
+										try{
+											opcom.updateText(6);
+										}catch (Exception e){}
 										LinkedList<Double> signalList = regul.getControlSignalList();
 																			
 										//System.out.println("signalList size: " + signalList.size());
@@ -300,8 +324,11 @@ public class Sequencing extends Thread{
 				refgen.setRef(7);
 				
 				try{
+					opcom.updateText(71);
 					TimeUnit.SECONDS.sleep(6);
+					opcom.updateText(81);
 				} catch (Exception e){}
+				
 				
 				regul.setBEAMMode();
 				//small state
@@ -328,9 +355,14 @@ public class Sequencing extends Thread{
 			}
 			case MEDIUM: { // Distance from basket to the wheel: 1,80m */
 				refgen.setRef(-8);
+				
 				try{
+					opcom.updateText(72);
 					TimeUnit.SECONDS.sleep(6);
+					opcom.updateText(82);
 				} catch (Exception e){}
+				
+				
 				regul.setBEAMMode();
 				refgen.setRef(-8);
 				try {
@@ -355,7 +387,9 @@ public class Sequencing extends Thread{
 				//Drop ball on the floor
 				regul.setBEAMMode();
 				refgen.setRef(5);
+				
 				try {
+					opcom.updateText(73);
 					while(-3 < regul.getAngle() && 4.5 > regul.getAngle()) {
 					}
 					TimeUnit.SECONDS.sleep(2);
