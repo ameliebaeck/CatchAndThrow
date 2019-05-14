@@ -98,10 +98,6 @@ public class Sequencing extends Thread{
 		boolean passageSeq = false;
 		while(true) {
 		
-			//initial state
-			// set ref angle to 0
-			// while(){}
-			//if(!passageSeq) {
 				regul.setBEAMMode();
 				refgen.setRef(0.0);
 				try{
@@ -117,17 +113,6 @@ public class Sequencing extends Thread{
 				} catch (Exception e) {
 					System.out.println(e);
 				}
-				
-				//JUST FOR DEBUGGING
-				/*refgen.setRef(5.0);
-				try {
-					while((4.65 > regul.getAngle()) || (regul.getAngle() > 5.2)) {
-						System.out.println("In Init State");
-						System.out.println(regul.getAngle());
-					}		
-				} catch (Exception e) {
-					System.out.println(e);
-				}*/
 				
 				System.out.println("1 - Initial state finished"); //Debugging
 				System.out.println("--------------------------");
@@ -206,9 +191,6 @@ public class Sequencing extends Thread{
                     double intervaltime = 0.0;
                     boolean release = false;
                     while(!release) {
-                        //System.out.println("Inside release while");  
-                        
-							
                         while(-1 < regul.getBallPos() && regul.getBallPos() < 1){
                                 if (resettime){
                                     catchtime = System.currentTimeMillis();
@@ -221,9 +203,7 @@ public class Sequencing extends Thread{
                                 if((intervaltime - catchtime) > 3000){
                                     release = true;
                                     break;
-                                }
-                                
-                                //System.out.println("Within the interval -1, 1");
+                                }                                
                         }
                         
                         resettime = true;
@@ -245,8 +225,6 @@ public class Sequencing extends Thread{
 						double starttime = t;
 						
 						while(!release) {
-                        //System.out.println("Inside release while");                        
-							
 							while(dist-0.75< regul.getBallPos() && regul.getBallPos() < dist+0.75){
 									if (resettime){
 										catchtime = System.currentTimeMillis();
@@ -307,97 +285,97 @@ public class Sequencing extends Thread{
 			// set state according to size-interval
 			
 			
-			
+			System.out.println("sum = ");
+			System.out.println(sum);
 			if(sum<17) {
 				setSMALLMode();
 			} else if (17<sum&&sum<30) {
 				setMEDIUMMode();
 			} else {
 				setBIGMode();
-			}
-			
-			
-			
+			}			
 			
 			switch (modeMon.getMode()) {
-			case SMALL: {
-				refgen.setRef(7);
-				
-				try{
-					opcom.updateText(71);
-					TimeUnit.SECONDS.sleep(6);
-					opcom.updateText(81);
-				} catch (Exception e){}
-				
-				
-				regul.setBEAMMode();
-				//small state
-				//increase angle
-				refgen.setRef(5);
-				
-				try {
-					while(3 < regul.getBallPos()) {
+				case SMALL: {
+					refgen.setRef(8);					
+					try{
+						opcom.updateText(71);
+						TimeUnit.SECONDS.sleep(6);
+						opcom.updateText(81);
+					} catch (Exception e){}									
+					regul.setBEAMMode();
+					//small state
+					//increase angle
+					refgen.setRef(8);
+					
+					try {
+						while(5 < regul.getBallPos()) {
+						}
+					} catch (Exception e) {
+						System.out.println(e);
 					}
-				} catch (Exception e) {
-					System.out.println(e);
+					
+					//decrease angle to throw in the small basket
+					refgen.setRef(-7);
+					
+					try {
+						TimeUnit.SECONDS.sleep(6);
+					} catch (Exception e) {
+						System.out.println(e);
+					}	
+					break;				
 				}
 				
-				//decrease angle to throw in the small basket
-				refgen.setRef(-7);
-				
-				try {
-					TimeUnit.SECONDS.sleep(4);
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				
-				
-			}
-			case MEDIUM: { // Distance from basket to the wheel: 1,80m */
-				refgen.setRef(-8);
-				
-				try{
-					opcom.updateText(72);
-					TimeUnit.SECONDS.sleep(6);
-					opcom.updateText(82);
-				} catch (Exception e){}
-				
-				
-				regul.setBEAMMode();
-				refgen.setRef(-8);
-				try {
-					while(-1 > regul.getBallPos()) {
-						System.out.println("Inside while -1 position");
+				case MEDIUM: { // Distance from basket to the wheel: 1,80m */
+					refgen.setRef(-8);
+					
+					try{
+						opcom.updateText(72);
+						TimeUnit.SECONDS.sleep(6);
+						opcom.updateText(82);
+					} catch (Exception e){}
+					
+					
+					regul.setBEAMMode();
+					refgen.setRef(-8);
+					try {
+						int c = 0;
+						while(-1 > regul.getBallPos()) {
+							if(c==100) {
+								System.out.println("Inside while -1 position");
+								c=0;
+							}
+							c++;
+						}
+					} catch (Exception e) {
+						System.out.println(e);
 					}
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				refgen.setRef(5.5);
-				try {
-					TimeUnit.SECONDS.sleep(4);
-				} catch (Exception e) {
-					System.out.println(e);
-				}
-				while(regul.getBallPos() != -10.0){
-					System.out.println("Ball position: " + regul.getBallPos());
-				}
-				
-			} 
-			case BIG: { 
-				//Drop ball on the floor
-				regul.setBEAMMode();
-				refgen.setRef(5);
-				
-				try {
-					opcom.updateText(73);
-					while(-3 < regul.getAngle() && 4.5 > regul.getAngle()) {
+					refgen.setRef(5.5);
+					try {
+						TimeUnit.SECONDS.sleep(4);
+					} catch (Exception e) {
+						System.out.println(e);
 					}
-					TimeUnit.SECONDS.sleep(2);
-				} catch (Exception e) {
-					System.out.println(e);
+					while(regul.getBallPos() != -10.0){
+						System.out.println("Ball position: " + regul.getBallPos());
+					}
+					break;					
+				}				 
+				case BIG: { 
+					//Drop ball on the floor
+					regul.setBEAMMode();
+					refgen.setRef(5);
+					
+					try {
+						opcom.updateText(73);
+						while(-3 < regul.getAngle() && 4.5 > regul.getAngle()) {
+						}
+						TimeUnit.SECONDS.sleep(2);
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+					break;
 				}
-				break;
-			}
 			}
 			
 		} //While loop
