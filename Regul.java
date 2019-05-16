@@ -89,8 +89,8 @@ public class Regul extends Thread {
 		}
 	}
 	public void resetParameters() {
-		PIDParameters p = regul.getOuterParameters();
-		PIParameters pi  = regul.getInnerParameters();
+		PIDParameters p = this.getOuterParameters();
+		PIParameters pi  = this.getInnerParameters();
 		p.K = -0.35;  //-0.2;
 		p.Ti = 1.00; //5.00;  //0.0;
 		p.Tr = 10.0;
@@ -106,7 +106,8 @@ public class Regul extends Thread {
 		pi.H = 0.02; //Sampling interval in seconds
 		pi.Td = 0.2;
 		pi.N = 10.0;
-		regul.setInnerParameters(pi);
+		this.setInnerParameters(pi);
+		this.setOuterParameters(p);
 	}
 
 	public void setOpCom(OpCom opcom) {
