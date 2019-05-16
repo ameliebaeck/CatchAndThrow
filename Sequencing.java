@@ -90,7 +90,7 @@ public class Sequencing extends Thread{
 		pOuter.Td = 2;
 		pOuter.integratorOn = false;
 		regul.setOuterParameters(pOuter);
-		opcom.setOuterParameters(pOuter);
+		opcom.updateOuterParameters(pOuter);
 		modeMon.setMode(1);
 		opcom.mediumButton();
 		System.out.println("MEDIUM ball detected");
