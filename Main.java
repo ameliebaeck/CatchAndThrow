@@ -22,6 +22,7 @@ public class Main {
         seq.setRegul(regul);
 
         opcom.setRegul(regul); 
+        seq.setOpCom(opcom);
 
 	Runnable initializeGUI = new Runnable(){
 		public void run(){
@@ -37,6 +38,6 @@ public class Main {
         
         refgen.start(); 
         regul.start(); 
-        seq.start()
+        seq.start();
     } 
 } 

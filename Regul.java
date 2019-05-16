@@ -6,6 +6,7 @@ import se.lth.control.realtime.DigitalIn;
 import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
+import java.util.LinkedList;
 
 
 public class Regul extends Thread {
@@ -22,6 +23,7 @@ public class Regul extends Thread {
 	private AnalogIn analogInPosition;
 	private AnalogOut analogOut;
 	private DigitalIn digitalInPosition;
+	private DigitalOut fire;
 
 	private ReferenceGenerator referenceGenerator;
 	private OpCom opcom;
@@ -32,9 +34,10 @@ public class Regul extends Thread {
 	private Semaphore mutex; // used for synchronization at shut-down
 
 	private ModeMonitor modeMon;
+	private ListMonitor signalMon;
 
 	private final double min = -10.0;
-	private final double max = 10.0;
+	privat#2e final double max = 10.0;
 
 	private double u;
 	private double u2;
@@ -48,8 +51,8 @@ public class Regul extends Thread {
 	private double v;
 	
 	private boolean pitch;
-	private boolean isCaught = false;
-	
+
+	private double ballpos;	
 
 	// Inner monitor class
 	class ModeMonitor {
@@ -76,11 +79,41 @@ public class Regul extends Thread {
 			analogInPosition = new AnalogIn(1);
 			analogOut = new AnalogOut(0);
 			digitalInPosition = new DigitalIn(0);
+			fire = new DigitalOut(0);
 		} catch (IOChannelException e) {
 			System.out.print("Error: IOChannelException: ");
 			System.out.println(e.getMessage());
 		}
 		modeMon = new ModeMonitor();
+		signalMon = new ListMonitor();
+		for(int i = 0;i<50;i++) {
+			signalMon.add(0.0);
+		}
+	}
+	public void resetParameters() {
+		PIDParameters p = this.getOuterParameters();
+		PIParameters pi  = this.getInnerParameters();
+		p.K = -0.35;  //-0.2;
+		p.Ti = 1.00; //5.00;  //0.0;
+		p.Tr = 10.0;
+		p.Td = 1.4; //1.5; //1.2;
+		p.integratorOn = true;
+		p.N = 10.0;
+		p.Beta = 1.0;
+		p.H = 0.02;
+
+		pi.K = 3;
+		pi.Ti = 0.3;
+		pi.integratorOn = false;
+		pi.Tr = 10.0;
+		pi.Beta = 1.0;
+		pi.H = 0.02; //Sampling interval in seconds
+		pi.Td = 0.2;
+		pi.N = 10.0;
+		this.setInnerParameters(pi);
+		this.setOuterParameters(p);
+		opcom.updateOuterParameters(p);
+		opcom.updateInnerParameters(pi);
 	}
 
 	public void setOpCom(OpCom opcom) {
@@ -91,6 +124,23 @@ public class Regul extends Thread {
 	public void setRefGen(ReferenceGenerator referenceGenerator) {
 		// Written by you
 		this.referenceGenerator = referenceGenerator;
+	}
+	public void fireBall() {
+		try {
+			fire.set(false);
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+		
+	}
+	public void closeBall() {
+		try {
+			fire.set(true);		
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	// Called in every sample in order to send plot data to OpCom
@@ -202,6 +252,35 @@ public class Regul extends Thread {
 		return pitch;
 	}
 
+	//Get position value. Called from Sequencing
+	public double getBallPos (){
+		try {
+			ballpos = analogInPosition.get();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return ballpos;
+	}
+
+	class ListMonitor {
+		private LinkedList<Double> signalList = new LinkedList<Double>();
+		
+		public synchronized void add(double x) {
+			signalList.add(x);
+		}
+		public synchronized void addElement(double controlSignalElement) {
+			signalList.remove();
+			signalList.add(controlSignalElement);
+		}
+		public synchronized LinkedList<Double> getControlSignal() {
+			return (LinkedList) signalList.clone();
+		}
+	}
+
+	public LinkedList<Double> getControlSignalList() {
+		return signalMon.getControlSignal();
+	}
+
 	public void run() {
 		long duration;
 		long t = System.currentTimeMillis();
@@ -280,6 +359,7 @@ public class Regul extends Thread {
 					
 					//inner.updateState(u2-uff);
 					inner.updateState(u2);
+					signalMon.addElement(u2);
 				}
 				
 				sendDataToOpCom(yref,y2,u2);
@@ -320,6 +400,7 @@ public class Regul extends Thread {
 						}
 						
 						inner.updateState(u2-uff);
+						signalMon.addElement(u2-uff);
 					}
 					
 					if((v+uff) != u2) { //Inner loop saturated
@@ -357,7 +438,7 @@ public class Regul extends Thread {
 						//yref = yref+((yref-y2)/(Math.abs(yref-y2)))*0.005;
 					}else{
 						passage +=1;
-						yref=y2-.17;
+						//yref=y2-.17;
 					}
 				}
 				} catch (Exception e) {
