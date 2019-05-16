@@ -77,7 +77,6 @@ public class Sequencing extends Thread{
 	
 	public void setSMALLMode() {
 		PIParameters pInner = regul.getInnerParameters();
-		pInner.integratorOn = true;
 		regul.setInnerParameters(pInner);
 		modeMon.setMode(0);
 		opcom.smallButton();
