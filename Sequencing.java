@@ -11,7 +11,7 @@ import java.util.LinkedList;
 
 public class Sequencing extends Thread{
 	
-	
+	#2
 	public static final int SMALL = 0;
 	public static final int MEDIUM = 1;
 	public static final int BIG = 2;
@@ -31,6 +31,7 @@ public class Sequencing extends Thread{
 	
 	private DigitalIn pitch;
 	private DigitalOut fire;
+	private boolean gotCaught = false;
 	
 	//Inner monitor class
 	class ModeMonitor{
@@ -69,6 +70,10 @@ public class Sequencing extends Thread{
 	
 	public void setOpCom(OpCom opcom) {
 		this.opcom = opcom;
+	}
+	
+	public void ballCaught() {
+		gotCaught = true;
 	}
 	
 	public void setRefGen(ReferenceGenerator refgen) {

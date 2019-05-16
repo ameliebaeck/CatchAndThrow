@@ -14,6 +14,7 @@ public class Regul extends Thread {
 	public static final int BEAM = 1;
 	public static final int BALL = 2;
 	public static final int BEAMPOS = 3;
+	public static final int CATCHING = 4;
 
 	private PI inner = new PI("PI");
 	private PID outer = new PID("PID");
@@ -36,12 +37,13 @@ public class Regul extends Thread {
 	private ListMonitor signalMon;
 
 	private final double min = -10.0;
-	private final double max = 10.0;
+	privat#2e final double max = 10.0;
 
 	private double u;
 	private double u2;
 	private double y;
 	private double y2;
+	private double ylastsample;
 	private double yref;
 	private double phiff;
 	private double uff;
@@ -49,8 +51,8 @@ public class Regul extends Thread {
 	private double v;
 	
 	private boolean pitch;
-	private double ballpos;
-	
+
+	private double ballpos;	
 
 	// Inner monitor class
 	class ModeMonitor {
@@ -155,7 +157,7 @@ public class Regul extends Thread {
 		inner.setParameters(p);
 		System.out.println("Parameters changed for the inner loop.");
 	}
-
+	
 	public synchronized PIParameters getInnerParameters() {
 		// Written by you
 		return inner.getParameters();
@@ -177,7 +179,11 @@ public class Regul extends Thread {
 		modeMon.setMode(0);
 		System.out.println("Controller turned OFF.");
 	}
-
+	
+	public boolean gotCaught(){
+		return isCaught;		
+	}
+	
 	public void setBEAMMode() {
 		// Written by you
 		modeMon.setMode(1);
@@ -188,6 +194,12 @@ public class Regul extends Thread {
 		// Written by you
 		modeMon.setMode(2);
 		System.out.println("Controller in BALL mode.");
+	}
+	
+	public void setCATCHMode() {
+		//Written by you
+		modeMon.setMode(4);
+		System.out.println("Controller in CATCH mode.");
 	}
 	
 	public void setBEAMPOSMode() {
@@ -460,7 +472,60 @@ public class Regul extends Thread {
 				System.out.println("Error: Illegal mode.");
 				break;
 			}
+			case CATCHING: {
+				// Code for the CATCH mode
+				// Written by you.
+				// Should include a call to sendDataToOpCom 
+				
+				try {
+					y = analogInPosition.get();
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				if((ylastsample-y)>0){
+					this.isCaught = true;
+				}
+					
+				yref = referenceGenerator.getRef();
+				uff = referenceGenerator.getUff();
+				phiff = referenceGenerator.getPhiff();
+				
+				synchronized (outer) {
+					u = outer.calculateOutput(y, yref);
+					phiref = limit(u+phiff, min, max);
+					try {
+						y2 = analogInAngle.get() + 0.23;
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+					
+					synchronized(inner) {
+						v = inner.calculateOutput(y2, phiref);
+						u2 = limit(v+uff, min, max);
+						
+						try {
+							analogOut.set(u2);
+						} catch (Exception e) {
+							System.out.println(e);
+						}
+						
+						inner.updateState(u2-uff);
+					}
+					
+					if((v+uff) != u2) { //Inner loop saturated
+						outer.updateState(y2-phiff);
+					} else {
+						outer.updateState(phiref-phiff);
+					}
+					
+				}
+				
+				sendDataToOpCom(yref,y,u2);
+				
+				break;
 			}
+			}
+			
 
 	// sleep
 	t=t+inner.getHMillis();duration=t-System.currentTimeMillis();
