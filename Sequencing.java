@@ -82,12 +82,18 @@ public class Sequencing extends Thread{
 	}
 	
 	public void setMEDIUMMode() {
+		PIDParameters pOuter = regul.getOuterParameters();
+		pOuter.I = 6;
+		regul.setOuterParameters(pOuter);
 		modeMon.setMode(1);
 		opcom.mediumButton();
 		System.out.println("MEDIUM ball detected");
 	}
 	
 	public void setBIGMode() {
+		
+
+
 		modeMon.setMode(2);
 		opcom.bigButton();
 		System.out.println("BIG ball detected");
@@ -377,8 +383,7 @@ public class Sequencing extends Thread{
 					break;
 				}
 			}
-			
-		} //While loop
-	}//Run method
+		}
+	}
 	
 }
