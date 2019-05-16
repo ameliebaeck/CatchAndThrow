@@ -511,6 +511,25 @@ public class OpCom {
 		medium.setBackground(Color.gray);
 		small.setBackground(Color.gray);
 	}
+
+	public void updateOuterParameters(PIDParameters p) {
+		outerParKField.setValue(p.K);
+		outerParTiField.setValue(p.Ti);
+		outerParTdField.setValue(p.Td);
+		outerParNField.setValue(p.N);
+		outerParTrField.setValue(p.Tr);
+		outerParBetaField.setValue(p.Beta);
+		outerParHField.setValue(p.H);
+	}
+
+	public void updateInnerParameters(PIParameters p) {
+		innerParKField.setValue(p.K);
+		innerParTiField.setValue(p.Ti);
+		innerParNField.setValue(p.N);
+		innerParTrField.setValue(p.Tr);
+		innerParBetaField.setValue(p.Beta);
+		innerParHField.setValue(p.H);
+	}
 	//Called from Sequencing to update the state (text)
 	public void updateText (int stateNum){
 		

@@ -110,6 +110,8 @@ public class Regul extends Thread {
 		pi.N = 10.0;
 		this.setInnerParameters(pi);
 		this.setOuterParameters(p);
+		opcom.setOuterParameters(p);
+		opcom.setInnerParameters(pi);
 	}
 
 	public void setOpCom(OpCom opcom) {
