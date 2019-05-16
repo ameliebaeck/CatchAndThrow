@@ -92,7 +92,7 @@ public class Sequencing extends Thread{
 		regul.setOuterParameters(pOuter);
 		opcom.updateOuterParameters(pOuter);
 		PIParameters p = regul.getInnerParameters();
-		p.K = 10;
+		p.K = 8;
 		p.Td = 0.1;
 		regul.setInnerParameters(p);
 		opcom.updateInnerParameters(p);
@@ -358,7 +358,7 @@ public class Sequencing extends Thread{
 					
 					
 					regul.setBEAMMode();
-					refgen.setRef(-9.5);
+					refgen.setRef(-8);
 					try {
 						c = 0;
 						while(-1 > regul.getBallPos()) {
