@@ -85,8 +85,8 @@ public class Sequencing extends Thread{
 	
 	public void setMEDIUMMode() {
 		PIDParameters pOuter = regul.getOuterParameters();
-		pOuter.Ti = 10;
-		pOuter.K = -0.3;
+		pOuter.Ti = 15;
+		pOuter.K = -0.15;
 		pOuter.Td = 2;
 		regul.setOuterParameters(pOuter);
 		modeMon.setMode(1);
