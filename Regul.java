@@ -101,6 +101,7 @@ public class Regul extends Thread {
 
 		pi.K = 3;
 		pi.Ti = 0.3;
+		pi.integratorOn = false;
 		pi.Tr = 10.0;
 		pi.Beta = 1.0;
 		pi.H = 0.02; //Sampling interval in seconds
