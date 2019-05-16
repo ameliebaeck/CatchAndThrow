@@ -506,6 +506,11 @@ public class OpCom {
 		small.setBackground(Color.red);
 	}
 	
+	public void resetButtons() {
+		big.setBackground(Color.grey);
+		medium.setBackground(Color.grey);
+		small.setBackground(Color.grey);
+	}
 	//Called from Sequencing to update the state (text)
 	public void updateText (int stateNum){
 		

@@ -88,6 +88,26 @@ public class Regul extends Thread {
 			signalMon.add(0.0);
 		}
 	}
+	public void resetParameters() {
+		PIDParameters p = regul.getOuterParameters();
+		PIParameters pi  = regul.getInnerParameters();
+		p.K = -0.35;  //-0.2;
+		p.Ti = 1.00; //5.00;  //0.0;
+		p.Tr = 10.0;
+		p.Td = 1.4; //1.5; //1.2;
+		p.N = 10.0;
+		p.Beta = 1.0;
+		p.H = 0.02;
+
+		pi.K = 3;
+		pi.Ti = 0.3;
+		pi.Tr = 10.0;
+		pi.Beta = 1.0;
+		pi.H = 0.02; //Sampling interval in seconds
+		pi.Td = 0.2;
+		pi.N = 10.0;
+		regul.setInnerParameters(pi);
+	}
 
 	public void setOpCom(OpCom opcom) {
 		// Written by you

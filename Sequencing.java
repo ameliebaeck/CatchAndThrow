@@ -105,7 +105,8 @@ public class Sequencing extends Thread{
 		setPriority(priority);
 		boolean passageSeq = false;
 		while(true) {
-		
+				regul.resetParameters();
+				opcom.resetButtons();
 				regul.setBEAMMode();
 				refgen.setRef(0.0);
 				try{
