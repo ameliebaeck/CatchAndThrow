@@ -76,6 +76,9 @@ public class Sequencing extends Thread{
 	}
 	
 	public void setSMALLMode() {
+		PIParameters pInner = regul.getInnerParameters();
+		pInner.integratorOn = true;
+		regul.setInnerParameters(pInner);
 		modeMon.setMode(0);
 		opcom.smallButton();
 		System.out.println("SMALL ball detected");
@@ -83,7 +86,9 @@ public class Sequencing extends Thread{
 	
 	public void setMEDIUMMode() {
 		PIDParameters pOuter = regul.getOuterParameters();
-		pOuter.I = 6;
+		pOuter.Ti = 10;
+		pOuter.K = -0.3;
+		pOuter.Td = 2;
 		regul.setOuterParameters(pOuter);
 		modeMon.setMode(1);
 		opcom.mediumButton();
@@ -91,9 +96,6 @@ public class Sequencing extends Thread{
 	}
 	
 	public void setBIGMode() {
-		
-
-
 		modeMon.setMode(2);
 		opcom.bigButton();
 		System.out.println("BIG ball detected");
