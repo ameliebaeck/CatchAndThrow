@@ -377,6 +377,7 @@ public class Sequencing extends Thread{
 					} catch (Exception e) {
 						System.out.println(e);
 					}
+					refgen.setRef(0.0);:
 					while(regul.getBallPos() != -10.0){
 						System.out.println("Ball position: " + regul.getBallPos());
 					}
