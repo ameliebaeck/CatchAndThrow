@@ -85,9 +85,10 @@ public class Sequencing extends Thread{
 	
 	public void setMEDIUMMode() {
 		PIDParameters pOuter = regul.getOuterParameters();
-		pOuter.Ti = 15;
-		pOuter.K = -0.15;
+		pOuter.Ti = 10;
+		pOuter.K = -0.11;
 		pOuter.Td = 2;
+		pOuter.integratorOn = false;
 		regul.setOuterParameters(pOuter);
 		modeMon.setMode(1);
 		opcom.mediumButton();
@@ -336,18 +337,24 @@ public class Sequencing extends Thread{
 				
 				case MEDIUM: { // Distance from basket to the wheel: 1,80m */
 					refgen.setRef(-8);
-					
+					int c = 0;
 					try{
 						opcom.updateText(72);
-						TimeUnit.SECONDS.sleep(6);
+						while(-7.5 < regul.getBallPos()) {
+							if(c==100) {
+								System.out.println("Inside while -1 position");
+								c=0;
+							}
+							c++;
+						}
 						opcom.updateText(82);
 					} catch (Exception e){}
 					
 					
 					regul.setBEAMMode();
-					refgen.setRef(-8);
+					refgen.setRef(-9.5);
 					try {
-						int c = 0;
+						c = 0;
 						while(-1 > regul.getBallPos()) {
 							if(c==100) {
 								System.out.println("Inside while -1 position");
@@ -358,7 +365,7 @@ public class Sequencing extends Thread{
 					} catch (Exception e) {
 						System.out.println(e);
 					}
-					refgen.setRef(5.5);
+					refgen.setRef(7.5);
 					try {
 						TimeUnit.SECONDS.sleep(4);
 					} catch (Exception e) {

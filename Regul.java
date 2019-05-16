@@ -95,6 +95,7 @@ public class Regul extends Thread {
 		p.Ti = 1.00; //5.00;  //0.0;
 		p.Tr = 10.0;
 		p.Td = 1.4; //1.5; //1.2;
+		p.integratorOn = true;
 		p.N = 10.0;
 		p.Beta = 1.0;
 		p.H = 0.02;
