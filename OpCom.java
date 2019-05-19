@@ -22,7 +22,7 @@ public class OpCom {
 
 	// Declarartion of panels.
 	private BoxPanel guiPanel, plotterPanel, innerParPanel, outerParPanel, parPanel;
-	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel, sizeButtonPanel, statePanel;
+	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel; //IRENE BEGIN //sizeButtonPanel, statePanel;
 	private PlotterPanel measPanel, ctrlPanel;
 
 	// Declaration of components.
@@ -58,6 +58,16 @@ public class OpCom {
 	
 	private JTextField seqState;
 	
+	//IRENE BEGIN
+	private BoxPanel sizeButtonPanel, stateTextPanel;
+	private JPanel sizeAndStatePanel;
+	
+	private JButton small;
+	private JButton medium;
+	private JButton big; 
+	
+	private JTextField seqState;
+	//IRENE END
 
 	/** Constructor. */
 	public OpCom(int plotterPriority) {
@@ -334,6 +344,8 @@ public class OpCom {
 		parPanel.addGlue();
 		parPanel.add(outerParButtonPanel);
 
+		//IRENE BEGIN --> commented
+		/*
 		//Create panel for the size buttons
 		sizeButtonPanel = new JPanel();
 		sizeButtonPanel.setLayout(new FlowLayout());
@@ -355,6 +367,43 @@ public class OpCom {
 		seqState = new JTextField("OFF");
 		seqState.setEditable(true);
 		//seqState.setText("1-Initial state");
+		*/
+		//IRENE END
+
+		//IRENE BEGIN
+		//Create panel for the size buttons		
+		sizeButtonPanel = new BoxPanel(BoxPanel.HORIZONTAL);
+		sizeButtonPanel.setBorder(BorderFactory.createTitledBorder("Ball size"));
+		
+		//Create the buttons
+		small = new JButton("Small");
+		medium = new JButton("Medium");
+		big = new JButton("Big");
+		
+		// Group the size buttons and add them to the panel
+		sizeButtonPanel.add(small);
+		sizeButtonPanel.addGlue();
+		sizeButtonPanel.add(medium);
+		sizeButtonPanel.addGlue();
+		sizeButtonPanel.add(big);
+		
+		//Create panel for the sequencer state
+		stateTextPanel = new BoxPanel(BoxPanel.HORIZONTAL);
+		stateTextPanel.setBorder(BorderFactory.createTitledBorder("Current state"));
+		
+		// Create text frame
+		seqState = new JTextField("OFF");
+		seqState.setEditable(true);
+		
+		//Add text frame (sequencer state) to the panel
+		stateTextPanel.add(seqState);
+		
+		//Create panel for the size buttons and the text field
+		sizeAndStatePanel = new JPanel();
+		sizeAndStatePanel.setLayout(new GridLayout(0,1));
+		sizeAndStatePanel.add(sizeButtonPanel);
+		sizeAndStatePanel.add(stateTextPanel);
+		//IRENE END
 		
 		
 		// Create panel for the radio buttons.
@@ -371,6 +420,8 @@ public class OpCom {
 		group.add(offModeButton);
 		group.add(beamModeButton);
 		group.add(ballModeButton);
+		
+
 		// Button action listeners.
 		offModeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -400,22 +451,30 @@ public class OpCom {
 		buttonPanel.add(offModeButton, BorderLayout.NORTH);
 		buttonPanel.add(beamModeButton, BorderLayout.CENTER);
 		buttonPanel.add(ballModeButton, BorderLayout.SOUTH);
-		
+
+		//IRENE BEGIN --> four lines commented
 		// Add size buttons to button panel.
-		sizeButtonPanel.add(small, BorderLayout.NORTH);
-		sizeButtonPanel.add(medium, BorderLayout.CENTER);
-		sizeButtonPanel.add(big, BorderLayout.SOUTH);
+		//sizeButtonPanel.add(small, BorderLayout.NORTH);
+		//sizeButtonPanel.add(medium, BorderLayout.CENTER);
+		//sizeButtonPanel.add(big, BorderLayout.SOUTH);
 		
 		//Add text frame (sequencer state) to the panel
-		statePanel.add(seqState,BorderLayout.CENTER);
+		//statePanel.add(seqState,BorderLayout.CENTER);
+		//IRENE END
 
 		// Panel for parameter panel and radio buttons
 		somePanel = new JPanel();
 		somePanel.setLayout(new BorderLayout());
 		somePanel.add(parPanel, BorderLayout.CENTER);
-		somePanel.add(buttonPanel, BorderLayout.SOUTH);
-		somePanel.add(sizeButtonPanel, BorderLayout.NORTH);
-		somePanel.add(statePanel, BorderLayout.EAST);
+		//IRENE BEGIN-->comment all three lines
+		//somePanel.add(buttonPanel, BorderLayout.SOUTH);
+		//somePanel.add(sizeButtonPanel, BorderLayout.NORTH);
+		//somePanel.add(statePanel, BorderLayout.EAST);
+		//IRENE END
+
+		//IRENE BEGIN
+		somepanel.add(sizeAndStatePanel, BorderLayout.NORTH);
+		//IRENE END
 
 		// Select initial mode.
 		mode = regul.getMode();
