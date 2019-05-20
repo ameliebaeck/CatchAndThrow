@@ -475,7 +475,7 @@ public class OpCom {
 		//IRENE END
 
 		//IRENE BEGIN
-		somepanel.add(sizeAndStatePanel, BorderLayout.NORTH);
+		somePanel.add(sizeAndStatePanel, BorderLayout.NORTH);
 		//IRENE END
 
 		// Select initial mode.
