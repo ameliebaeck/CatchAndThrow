@@ -53,11 +53,11 @@ public class OpCom {
 	private boolean isInitialized = false;
 	
 	//IRENE BEGIN --> commented
-	private JButton small;
-	private JButton medium;
-	private JButton big; 
+	//private JButton small;
+	//private JButton medium;
+	//private JButton big; 
 	
-	private JTextField seqState;
+	//private JTextField seqState;
 	//IRENE END
 	
 	//IRENE BEGIN
