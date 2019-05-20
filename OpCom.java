@@ -52,11 +52,13 @@ public class OpCom {
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
 	
+	//IRENE BEGIN --> commented
 	private JButton small;
 	private JButton medium;
 	private JButton big; 
 	
 	private JTextField seqState;
+	//IRENE END
 	
 	//IRENE BEGIN
 	private BoxPanel sizeButtonPanel, stateTextPanel;
