@@ -52,15 +52,7 @@ public class OpCom {
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
 	
-	//IRENE BEGIN --> commented
-	//private JButton small;
-	//private JButton medium;
-	//private JButton big; 
-	
-	//private JTextField seqState;
-	//IRENE END
-	
-	//IRENE BEGIN
+	//Modification BEGIN
 	private BoxPanel sizeButtonPanel, stateTextPanel;
 	private JPanel sizeAndStatePanel;
 	
@@ -69,7 +61,7 @@ public class OpCom {
 	private JButton big; 
 	
 	private JTextField seqState;
-	//IRENE END
+	//Modification END
 
 	/** Constructor. */
 	public OpCom(int plotterPriority) {
@@ -346,33 +338,7 @@ public class OpCom {
 		parPanel.addGlue();
 		parPanel.add(outerParButtonPanel);
 
-		//IRENE BEGIN --> commented
-		/*
-		//Create panel for the size buttons
-		sizeButtonPanel = new JPanel();
-		sizeButtonPanel.setLayout(new FlowLayout());
-		//buttonPanel.setBorder(BorderFactory.createEtchedBorder());
-		//Create the buttons
-		small = new JButton("Small");
-		medium = new JButton("Medium");
-		big = new JButton("Big");
-		// Group the size buttons
-		ButtonGroup sizeGroup = new ButtonGroup();
-		sizeGroup.add(small);
-		sizeGroup.add(medium);
-		sizeGroup.add(big);
-		
-		//Create panel for the sequencer state
-		statePanel = new JPanel();
-		statePanel.setLayout(new FlowLayout());
-		// Create text frame
-		seqState = new JTextField("OFF");
-		seqState.setEditable(true);
-		//seqState.setText("1-Initial state");
-		*/
-		//IRENE END
-
-		//IRENE BEGIN
+		//Modification BEGIN
 		//Create panel for the size buttons		
 		sizeButtonPanel = new BoxPanel(BoxPanel.HORIZONTAL);
 		sizeButtonPanel.setBorder(BorderFactory.createTitledBorder("Ball size"));
@@ -405,7 +371,7 @@ public class OpCom {
 		sizeAndStatePanel.setLayout(new GridLayout(0,1));
 		sizeAndStatePanel.add(sizeButtonPanel);
 		sizeAndStatePanel.add(stateTextPanel);
-		//IRENE END
+		//Modification END
 		
 		
 		// Create panel for the radio buttons.
@@ -454,29 +420,17 @@ public class OpCom {
 		buttonPanel.add(beamModeButton, BorderLayout.CENTER);
 		buttonPanel.add(ballModeButton, BorderLayout.SOUTH);
 
-		//IRENE BEGIN --> four lines commented
-		// Add size buttons to button panel.
-		//sizeButtonPanel.add(small, BorderLayout.NORTH);
-		//sizeButtonPanel.add(medium, BorderLayout.CENTER);
-		//sizeButtonPanel.add(big, BorderLayout.SOUTH);
-		
-		//Add text frame (sequencer state) to the panel
-		//statePanel.add(seqState,BorderLayout.CENTER);
-		//IRENE END
-
 		// Panel for parameter panel and radio buttons
 		somePanel = new JPanel();
 		somePanel.setLayout(new BorderLayout());
 		somePanel.add(parPanel, BorderLayout.CENTER);
-		//IRENE BEGIN-->comment all three lines
+		//Modification BEGIN-->comment
 		//somePanel.add(buttonPanel, BorderLayout.SOUTH);
-		//somePanel.add(sizeButtonPanel, BorderLayout.NORTH);
-		//somePanel.add(statePanel, BorderLayout.EAST);
-		//IRENE END
+		//Modification END
 
-		//IRENE BEGIN
+		//Modification BEGIN
 		somePanel.add(sizeAndStatePanel, BorderLayout.NORTH);
-		//IRENE END
+		//Modification END
 
 		// Select initial mode.
 		mode = regul.getMode();
